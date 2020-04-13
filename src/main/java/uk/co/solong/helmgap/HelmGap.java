@@ -30,8 +30,9 @@ public class HelmGap {
      * tar of the registry images required by the helm chart, as well as the helm chart.
      *
      * @param chartDescriptor the chart descriptor obtainable through ChartDescriptor.by methods..
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException if there's an issue reading or writing to disk.
+     * @throws InterruptedException if the library is interrupted waiting for an external process to complete.
+     * @return AirgapInstall representing the airgap registry and chart files.
      */
     public AirgapInstall buildAirgap(ChartDescriptor chartDescriptor) throws IOException, InterruptedException {
         Path sessionRoot = Files.createTempDirectory("helmgap");
