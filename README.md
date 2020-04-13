@@ -12,7 +12,7 @@ You will need
 
 ## Usage
 
-1.  Add the helmgap dependency to your maven pom.xml
+1. Add the helmgap dependency to your maven pom.xml
 ```xml
 <dependency>
     <groupId>uk.co.solong</groupId>
@@ -21,7 +21,7 @@ You will need
 </dependency>
 ```
 
-1.  Call the library
+2. Call the library
 ```java
 ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
 HelmGap helmgap = new HelmGap();
