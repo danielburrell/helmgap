@@ -9,6 +9,7 @@ You will need
 - helm (`brew install helm`)
 - kbld (`brew tap k14s/tap && brew install kbld`)
 - Java 9+
+- Linux
 
 ## Usage
 
