@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class UrlDescriptor extends ChartDescriptor {
+public class ChartUrlDescriptor extends ChartDescriptor {
     private final String chartUrl;
     private final String friendlyName;
     private final String version;
 
-    public UrlDescriptor(String chartUrl, String friendlyName, String version) {
+    public ChartUrlDescriptor(String chartUrl, String friendlyName, String version) {
         this.chartUrl = chartUrl;
         this.friendlyName = friendlyName;
         this.version = version;

@@ -4,8 +4,8 @@ import java.util.List;
 
 public abstract class ChartDescriptor {
 
-    public static UrlDescriptor byChartUrl(String url, String friendlyName, String version) {
-        return new UrlDescriptor(url, friendlyName, version);
+    public static ChartUrlDescriptor byChartUrl(String url, String friendlyName, String version) {
+        return new ChartUrlDescriptor(url, friendlyName, version);
     }
 
     public static RepoUrlDescriptor byRepoUrl(String repoUrl, String chartName, String version) {
