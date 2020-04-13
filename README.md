@@ -17,7 +17,7 @@ You will need
 <dependency>
     <groupId>uk.co.solong</groupId>
     <artifactId>helmgap</artifactId>
-    <version>1.0</version>
+    <version>1.4</version>
 </dependency>
 ```
 
