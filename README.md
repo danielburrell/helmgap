@@ -43,5 +43,5 @@ ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://kubernetes-
 ```
 - Chart URL (use when the chart url is known - you must still provide a friendly name and version for the chart, it cannot be derived from the url, this may change in future)
 ```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz", "dask", "1.1.0");
+ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz", "dask", "1.1.0");
 ```
