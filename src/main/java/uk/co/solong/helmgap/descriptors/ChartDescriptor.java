@@ -4,20 +4,41 @@ import java.util.List;
 
 public abstract class ChartDescriptor {
 
-    public static ChartUrlDescriptor byChartUrl(String url, String friendlyName, String version) {
-        return new ChartUrlDescriptor(url, friendlyName, version);
+    /**
+     * Tell helmgap where the chart is located by supplying a URL
+     * @param url - the url where the chart is e.g.
+     *       https://kubernetes-charts.storage.googleapis.com/mychart-0.1.0.tgz
+     * @return A ChartDescriptor which can be passed to HelmGap::buildAirgap
+     */
+    public static ChartDescriptor byChartUrl(String url) {
+        return new ChartUrlDescriptor(url);
     }
 
-    public static RepoUrlDescriptor byRepoUrl(String repoUrl, String chartName, String version) {
+    /**
+     * Tell helmgap where the chart is located by supplying a URL
+     * @param repoUrl - the repoUrl where the chart is e.g.
+     *       https://kubernetes-charts.storage.googleapis.com.
+     * @param chartName - the name of the chart e.g. nginx.
+     * @param version - the version of the chart e.g. 0.1.0
+     *
+     * @return A ChartDescriptor which can be passed to HelmGap::buildAirgap
+     */
+    public static ChartDescriptor byRepoUrl(String repoUrl, String chartName, String version) {
         return new RepoUrlDescriptor(repoUrl, chartName, version);
     }
 
-    public static ShortDescriptor byShortName(String repoName, String chartName, String version) {
+    /**
+     * Tell helmgap where the chart is located by supplying a URL
+     * @param repoName - the repoName as given when doing helm repo add xyz. e.g. 'stable'
+     * @param chartName - the name of the chart e.g. nginx.
+     * @param version - the version of the chart e.g. 0.1.0
+     *
+     * @return A ChartDescriptor which can be passed to HelmGap::buildAirgap
+     */
+    public static ChartDescriptor byShortName(String repoName, String chartName, String version) {
         return new ShortDescriptor(repoName, chartName, version);
     }
 
     public abstract List<String> getDescriptor();
-    public abstract String getName();
 
-    public abstract String getVersion();
 }

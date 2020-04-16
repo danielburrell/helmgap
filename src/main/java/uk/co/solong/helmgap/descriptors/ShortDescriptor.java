@@ -15,25 +15,8 @@ public class ShortDescriptor extends ChartDescriptor{
     }
 
     @Override
-    public String getVersion() {
-        return version;
-    }
-
-    public String getChartName() {
-        return chartName;
-    }
-
-    public String getRepoName() {
-        return repoName;
-    }
-
-    @Override
     public List<String> getDescriptor() {
         return Arrays.asList("--version", version, repoName+"/"+chartName);
     }
 
-    @Override
-    public String getName() {
-        return chartName;
-    }
 }

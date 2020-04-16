@@ -15,25 +15,8 @@ public final class RepoUrlDescriptor extends ChartDescriptor{
     }
 
     @Override
-    public String getVersion() {
-        return version;
-    }
-
-    public String getChartName() {
-        return chartName;
-    }
-
-    public String getRepoUrl() {
-        return repoUrl;
-    }
-
-    @Override
     public List<String> getDescriptor() {
         return Arrays.asList("--repo", repoUrl, "--version", version, chartName);
     }
 
-    @Override
-    public String getName() {
-        return chartName;
-    }
 }

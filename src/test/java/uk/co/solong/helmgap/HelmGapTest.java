@@ -56,7 +56,7 @@ class HelmGapTest {
         chartTarTmp.toFile().mkdirs();
     }
     @Test
-    void helmPull() throws IOException, InterruptedException {
+    void helmPull() throws IOException, HelmPullException, ExternalProcessError {
         HelmGap testSubject = new HelmGap();
         assertEquals(0, Files.list(pullDir).count());
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
@@ -66,7 +66,7 @@ class HelmGapTest {
     }
 
     @Test
-    void helmDeleteTests() throws IOException, InterruptedException {
+    void helmDeleteTests() throws IOException, HelmPullException, ExternalProcessError, CouldNotDeleteTestsException {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
@@ -85,7 +85,7 @@ class HelmGapTest {
     }
 
     @Test
-    void helmTemplate() throws IOException, InterruptedException {
+    void helmTemplate() throws HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
@@ -95,7 +95,7 @@ class HelmGapTest {
     }
 
     @Test
-    void kbldSha() throws IOException, InterruptedException {
+    void kbldSha() throws IOException, HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException, KbldShaException {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
@@ -112,7 +112,7 @@ class HelmGapTest {
     }
 
     @Test
-    void kbldPkg() throws IOException, InterruptedException {
+    void kbldPkg() throws HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException, KbldShaException, KbldPkgException {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
@@ -125,9 +125,29 @@ class HelmGapTest {
     }
 
     @Test
-    void buildAirgap() throws IOException, InterruptedException {
+    void buildAirgapByShortName() throws AirgapInstallException {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
+        AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
+        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getRegistryArchive().toString()+"\nChart: "+airgapInstall.getChartPullArchive().toString());
+        assertTrue(airgapInstall.getChartPullArchive().exists());
+        assertTrue(airgapInstall.getRegistryArchive().exists());
+    }
+
+    @Test
+    void buildAirgapByChartUrl() throws AirgapInstallException {
+        HelmGap testSubject = new HelmGap();
+        ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("https://kubernetes-charts.storage.googleapis.com/hackmd-0.1.0.tgz");
+        AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
+        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getRegistryArchive().toString()+"\nChart: "+airgapInstall.getChartPullArchive().toString());
+        assertTrue(airgapInstall.getChartPullArchive().exists());
+        assertTrue(airgapInstall.getRegistryArchive().exists());
+    }
+
+    @Test
+    void buildAirgapByRepoUrl() throws AirgapInstallException {
+        HelmGap testSubject = new HelmGap();
+        ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://kubernetes-charts.storage.googleapis.com", "hackmd", "0.1.0");
         AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
         logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getRegistryArchive().toString()+"\nChart: "+airgapInstall.getChartPullArchive().toString());
         assertTrue(airgapInstall.getChartPullArchive().exists());

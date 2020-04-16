@@ -6,17 +6,9 @@ import java.util.List;
 
 public class ChartUrlDescriptor extends ChartDescriptor {
     private final String chartUrl;
-    private final String friendlyName;
-    private final String version;
 
-    public ChartUrlDescriptor(String chartUrl, String friendlyName, String version) {
+    public ChartUrlDescriptor(String chartUrl) {
         this.chartUrl = chartUrl;
-        this.friendlyName = friendlyName;
-        this.version = version;
-    }
-
-    public String getChartUrl() {
-        return chartUrl;
     }
 
     @Override
@@ -24,13 +16,4 @@ public class ChartUrlDescriptor extends ChartDescriptor {
         return Collections.singletonList(chartUrl);
     }
 
-    @Override
-    public String getName() {
-        return friendlyName;
-    }
-
-    @Override
-    public String getVersion() {
-        return version;
-    }
 }
