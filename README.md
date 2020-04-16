@@ -27,19 +27,17 @@ You will need
 ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
 HelmGap helmgap = new HelmGap();
 AirgapInstall result = helmgap.buildAirgap(chartDescriptor);
-File imagesArchive = result.getAirgapInstallerArchive();
+File imagesArchive = result.getAirgapInstallerArchive(); //<-- this is your airgap!
 ```
 
 If you inspect imagesArchive, you'll find `hackmd-airgap-0.1.0.tgz` with all the images inside.
-
-3. Done!
 
 ---
 
 # Optional Features
 Optionally, you can also get a copy of the original helm chart as well (handy!):
 ```java
-File chart = files.getOriginalChart(;)
+File chart = files.getOriginalChart()
 ```
 In this case this would return `hackmd-0.1.0.tgz` - the original helm chart.
 
