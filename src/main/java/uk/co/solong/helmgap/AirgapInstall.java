@@ -11,11 +11,19 @@ public class AirgapInstall {
         this.chartPullArchive = chartPullArchive;
     }
 
-    public File getChartPullArchive() {
+    /**
+     * Returns a copy of the original chart that was requested, as a file reference.
+     * @return - a copy of the original chart.
+     */
+    public File getOriginalChart() {
         return chartPullArchive;
     }
 
-    public File getRegistryArchive() {
+    /**
+     * Returns the airgap installer archive, as a file reference.
+     * @return - the airgap installer archive.
+     */
+    public File getAirgapInstallerArchive() {
         return registryArchive;
     }
 }

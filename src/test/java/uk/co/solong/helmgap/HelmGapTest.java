@@ -1,6 +1,5 @@
 package uk.co.solong.helmgap;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +7,6 @@ import uk.co.solong.helmgap.descriptors.ChartDescriptor;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -129,9 +127,9 @@ class HelmGapTest {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
-        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getRegistryArchive().toString()+"\nChart: "+airgapInstall.getChartPullArchive().toString());
-        assertTrue(airgapInstall.getChartPullArchive().exists());
-        assertTrue(airgapInstall.getRegistryArchive().exists());
+        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getAirgapInstallerArchive().toString()+"\nChart: "+airgapInstall.getOriginalChart().toString());
+        assertTrue(airgapInstall.getOriginalChart().exists());
+        assertTrue(airgapInstall.getAirgapInstallerArchive().exists());
     }
 
     @Test
@@ -139,9 +137,9 @@ class HelmGapTest {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("https://kubernetes-charts.storage.googleapis.com/hackmd-0.1.0.tgz");
         AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
-        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getRegistryArchive().toString()+"\nChart: "+airgapInstall.getChartPullArchive().toString());
-        assertTrue(airgapInstall.getChartPullArchive().exists());
-        assertTrue(airgapInstall.getRegistryArchive().exists());
+        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getAirgapInstallerArchive().toString()+"\nChart: "+airgapInstall.getOriginalChart().toString());
+        assertTrue(airgapInstall.getOriginalChart().exists());
+        assertTrue(airgapInstall.getAirgapInstallerArchive().exists());
     }
 
     @Test
@@ -149,8 +147,8 @@ class HelmGapTest {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://kubernetes-charts.storage.googleapis.com", "hackmd", "0.1.0");
         AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
-        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getRegistryArchive().toString()+"\nChart: "+airgapInstall.getChartPullArchive().toString());
-        assertTrue(airgapInstall.getChartPullArchive().exists());
-        assertTrue(airgapInstall.getRegistryArchive().exists());
+        logger.info("Generated airgap installer with\nRegistry: "+airgapInstall.getAirgapInstallerArchive().toString()+"\nChart: "+airgapInstall.getOriginalChart().toString());
+        assertTrue(airgapInstall.getOriginalChart().exists());
+        assertTrue(airgapInstall.getAirgapInstallerArchive().exists());
     }
 }

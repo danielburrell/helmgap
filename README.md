@@ -18,7 +18,7 @@ You will need
 <dependency>
     <groupId>uk.co.solong</groupId>
     <artifactId>helmgap</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
 </dependency>
 ```
 
@@ -26,23 +26,34 @@ You will need
 ```java
 ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
 HelmGap helmgap = new HelmGap();
-AirgapInstall files = helmgap.buildAirgap(chartDescriptor);
-File chart = files.getChartPullArchive(); //the chart you requested.
-File registry = files.getRegistryArchive(); //the airgap registry you requested.
+AirgapInstall result = helmgap.buildAirgap(chartDescriptor);
+File registry = result.getAirgapInstallerArchive(); //the airgap registry you requested.
 ```
 
+The above registry file is
+ - `hackmd-airgap-0.1.0.tgz` - the container images required by the helm chart, in OCI Registry Archive Format.
+
+You can also get a copy of the helm chart (useful!).
+```java
+File chart = files.getOriginalChart(); //the original chart
+```
+
+The above chart file is
+ - `hackmd-0.1.0.tgz` - the original helm chart.
+
 That's it!
+
 # Advanced Usage
-There are 3 different chart descriptors supported:
-- Short Name (use when the repository already exists on the machine via `helm repo add`)
+There are 3 different chart descriptors supported which cover all valid `helm pull` syntax:
+- Short Name (can be used when the repository already exists on the machine via `helm repo add`)
 ```java
 ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
 ```
-- Repo URL (use when the repo url is known but not necessarily on the machine)
+- Repo URL (can be used when the repo url is known, but the repo has not necessarily been added to the machine)
 ```java
 ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://kubernetes-charts.storage.googleapis.com", "hackmd", "0.1.0");
 ```
-- Chart URL (use when the chart url is known - you must still provide a friendly name and version for the chart, it cannot be derived from the url, this may change in future)
+- Chart URL (use if only the chart url is known)
 ```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz", "dask", "1.1.0");
+ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz");
 ```
