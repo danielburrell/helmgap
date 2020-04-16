@@ -9,6 +9,7 @@ You will need
 - helm (`brew install helm`)
 - kbld (`brew tap k14s/tap && brew install kbld`)
 - Java 9+
+- Linux
 
 ## Usage
 
@@ -17,7 +18,7 @@ You will need
 <dependency>
     <groupId>uk.co.solong</groupId>
     <artifactId>helmgap</artifactId>
-    <version>1.0</version>
+    <version>1.4</version>
 </dependency>
 ```
 
