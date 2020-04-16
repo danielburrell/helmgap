@@ -147,12 +147,7 @@ public class HelmGap {
         return shaFile;
     }
 
-    /**
-     * Recursively deletes any folder and its contents if the folder is called tests
-     *
-     * @param chartRoot the root of the chart e.g. /tmp/pullroot/stackstorm-ha/
-     * @throws IOException
-     */
+
     void helmDeleteTests(Path chartRoot) throws CouldNotDeleteTestsException {
         logger.info("Deleting Test Directories");
 
