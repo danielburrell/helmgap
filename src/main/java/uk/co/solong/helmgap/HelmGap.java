@@ -34,8 +34,7 @@ public class HelmGap {
      *
      * @param chartDescriptor the chart descriptor obtainable through ChartDescriptor.by methods..
      * @return AirgapInstall representing the airgap registry and chart files.
-     * @throws IOException          if there's an issue reading or writing to disk.
-     * @throws InterruptedException if the library is interrupted waiting for an external process to complete.
+     * @throws AirgapInstallException for any AirgapInstallExceptions that might be thrown.
      */
     public AirgapInstall buildAirgap(ChartDescriptor chartDescriptor) throws AirgapInstallException {
         verifyLinux();
