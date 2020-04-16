@@ -27,24 +27,22 @@ You will need
 ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
 HelmGap helmgap = new HelmGap();
 AirgapInstall result = helmgap.buildAirgap(chartDescriptor);
-File registry = result.getAirgapInstallerArchive(); //the airgap registry you requested.
+File imagesArchive = result.getAirgapInstallerArchive();
 ```
 
-The above registry file is
- - `hackmd-airgap-0.1.0.tgz` - the container images required by the helm chart, in OCI Registry Archive Format.
+If you inspect imagesArchive, you'll find `hackmd-airgap-0.1.0.tgz` with all the images inside.
 
-You can also get a copy of the helm chart (useful!).
+3. That's it!
+
+# Optional Features
+Optionally, you can also get a copy of the original helm chart as well (handy!):
 ```java
-File chart = files.getOriginalChart(); //the original chart
+File chart = files.getOriginalChart(;)
 ```
-
-The above chart file is
- - `hackmd-0.1.0.tgz` - the original helm chart.
-
-That's it!
+In this case this would return `hackmd-0.1.0.tgz` - the original helm chart.
 
 # Advanced Usage
-There are 3 different chart descriptors supported which cover all valid `helm pull` syntax:
+There are 3 ways to tell HelmGap where your chart is located. All correspond to the `helm pull` syntax:
 - Short Name (can be used when the repository already exists on the machine via `helm repo add`)
 ```java
 ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
