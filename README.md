@@ -30,7 +30,7 @@ AirgapInstall result = helmgap.buildAirgap(chartDescriptor);
 File imagesArchive = result.getAirgapInstallerArchive(); //<-- this is your airgap!
 ```
 
-If you inspect imagesArchive, you'll find `hackmd-airgap-0.1.0.tgz` with all the images inside.
+If you inspect `imagesArchive`, you'll find `hackmd-airgap-0.1.0.tgz` with all the images inside.
 
 ---
 
