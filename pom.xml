@@ -4,7 +4,7 @@
 
     <groupId>uk.co.solong</groupId>
     <artifactId>helmgap</artifactId>
-    <version>1.5</version>
+    <version>1.6-SNAPSHOT</version>
 
     <name>helmgap</name>
     <url>https://www.solong.co.uk/helmgap</url>
@@ -34,7 +34,7 @@
         <url>https://github.com/danielburrell/helmgap</url>
         <connection>scm:git:git@github.com/danielburrell/helmgap.git</connection>
         <developerConnection>scm:git:git@github.com:danielburrell/helmgap.git</developerConnection>
-        <tag>helmgap-1.5</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
