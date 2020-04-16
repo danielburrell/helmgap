@@ -32,7 +32,9 @@ File imagesArchive = result.getAirgapInstallerArchive();
 
 If you inspect imagesArchive, you'll find `hackmd-airgap-0.1.0.tgz` with all the images inside.
 
-3. That's it!
+3. Done!
+
+---
 
 # Optional Features
 Optionally, you can also get a copy of the original helm chart as well (handy!):
