@@ -1,5 +1,6 @@
 package uk.co.solong.helmgap.descriptors;
 
+import java.io.File;
 import java.util.List;
 
 public abstract class ChartDescriptor {
@@ -7,7 +8,7 @@ public abstract class ChartDescriptor {
     /**
      * Tell helmgap where the chart is located by supplying a URL
      * @param url - the url where the chart is e.g.
-     *       https://kubernetes-charts.storage.googleapis.com/mychart-0.1.0.tgz
+     *      https://charts.bitnami.com/bitnami/mychart-0.1.0.tgz
      * @return A ChartDescriptor which can be passed to HelmGap::buildAirgap
      */
     public static ChartDescriptor byChartUrl(String url) {
@@ -17,7 +18,7 @@ public abstract class ChartDescriptor {
     /**
      * Tell helmgap where the chart is located by supplying a URL
      * @param repoUrl - the repoUrl where the chart is e.g.
-     *       https://kubernetes-charts.storage.googleapis.com.
+     *      https://charts.bitnami.com/bitnami.
      * @param chartName - the name of the chart e.g. nginx.
      * @param version - the version of the chart e.g. 0.1.0
      *
@@ -37,6 +38,16 @@ public abstract class ChartDescriptor {
      */
     public static ChartDescriptor byShortName(String repoName, String chartName, String version) {
         return new ShortDescriptor(repoName, chartName, version);
+    }
+
+    /**
+     * Tell helmgap where the chart is located by pointing to an archive on disk
+     * @param archive - the archive file.
+     *
+     * @return A ChartDescriptor which can be passed to HelmGap::buildAirgap
+     */
+    public static ChartDescriptor byArchive(File archive) {
+        return new ArchiveDescriptor(archive);
     }
 
     public abstract List<String> getDescriptor();

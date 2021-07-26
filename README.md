@@ -18,20 +18,22 @@ You will need
 <dependency>
     <groupId>uk.co.solong</groupId>
     <artifactId>helmgap</artifactId>
-    <version>1.5</version>
+    <version>1.7</version>
 </dependency>
 ```
 
 2. Call the library
 ```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
+ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("bitnami", "redis", "6.0.0");
 HelmGap helmgap = new HelmGap();
 AirgapInstall result = helmgap.buildAirgap(chartDescriptor);
-File registry = result.getAirgapInstallerArchive(); //the airgap registry you requested.
+File imageArchive = result.getAirgapInstallerArchive(); //the airgap registry you requested.
+File lockFile = result.getLockFile(); //the associated lockfile requried for loading.
+
 ```
 
-The above registry file is
- - `hackmd-airgap-0.1.0.tgz` - the container images required by the helm chart, in OCI Registry Archive Format.
+The above `imageArchive` file is
+ - `redis-airgap-6.0.0.tgz` - the container images required by the helm chart, in KBLD image format.
 
 You can also get a copy of the helm chart (useful!).
 ```java
@@ -39,7 +41,7 @@ File chart = files.getOriginalChart(); //the original chart
 ```
 
 The above chart file is
- - `hackmd-0.1.0.tgz` - the original helm chart.
+ - `redis-6.0.0.tgz` - the original helm chart.
 
 That's it!
 
@@ -51,9 +53,14 @@ ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd"
 ```
 - Repo URL (can be used when the repo url is known, but the repo has not necessarily been added to the machine)
 ```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://kubernetes-charts.storage.googleapis.com", "hackmd", "0.1.0");
+ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://charts.bitnami.com/bitnami", "hackmd", "0.1.0");
 ```
 - Chart URL (use if only the chart url is known)
 ```java
 ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz");
+```
+
+## Specifying helm and kbld
+```java
+new HelmGap("/path/to/helm", "/path/to/kbld")
 ```

@@ -3,12 +3,14 @@ package uk.co.solong.helmgap;
 import java.io.File;
 
 public class AirgapInstall {
-    private final File registryArchive;
+    private final File imageArchive;
     private final File chartPullArchive;
+    private final File kbldLockFile;
 
-    AirgapInstall(File registryArchive, File chartPullArchive) {
-        this.registryArchive = registryArchive;
-        this.chartPullArchive = chartPullArchive;
+    AirgapInstall(File imageArchive, File chartArchive, File kbldLockFile) {
+        this.imageArchive = imageArchive;
+        this.chartPullArchive = chartArchive;
+        this.kbldLockFile = kbldLockFile;
     }
 
     /**
@@ -24,6 +26,14 @@ public class AirgapInstall {
      * @return - the airgap installer archive.
      */
     public File getAirgapInstallerArchive() {
-        return registryArchive;
+        return imageArchive;
+    }
+
+    /**
+     * Returns the kbld lockfile, as a file reference.
+     * @return - the kbld lock file
+     */
+    public File getLockFile() {
+        return kbldLockFile;
     }
 }
