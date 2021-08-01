@@ -35,6 +35,9 @@ File lockFile = result.getLockFile(); //the associated lockfile requried for loa
 The above `imageArchive` file is
  - `redis-airgap-6.0.0.tgz` - the container images required by the helm chart, in KBLD image format.
 
+The above `lockFile` file is 
+ - `redis-6.0.0-lock.yml` - the mapping between the sha256 id of each image and the image reference in the chart.
+
 You can also get a copy of the helm chart (useful!).
 ```java
 File chart = files.getOriginalChart(); //the original chart
@@ -47,20 +50,32 @@ That's it!
 
 # Advanced Usage
 There are 3 different chart descriptors supported which cover all valid `helm pull` syntax:
+
 - Short Name (can be used when the repository already exists on the machine via `helm repo add`)
-```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
-```
+    ```java
+    ChartDescriptor chartDescriptor = ChartDescriptor.byShortName("stable", "hackmd", "0.1.0");
+    ```
+
 - Repo URL (can be used when the repo url is known, but the repo has not necessarily been added to the machine)
-```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://charts.bitnami.com/bitnami", "hackmd", "0.1.0");
-```
+    ```java
+    ChartDescriptor chartDescriptor = ChartDescriptor.byRepoUrl("https://charts.bitnami.com/bitnami", "hackmd", "0.1.0");
+    ```
+
 - Chart URL (use if only the chart url is known)
-```java
-ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz");
-```
+    ```java
+    ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("http://storage.googleapis.com/kubernetes-charts/dask-1.1.0.tgz");
+    ```
+
+- Local Archive (use when the chart is a tgz file on local disk)
+    ```java
+    ChartDescriptor chartDescriptor = ChartDescriptor.byArchive("/home/user/dask-1.1.0.tgz");
+    ```
 
 ## Specifying helm and kbld
+
+By default, helmgap will use your PATH to find helm and kbld. 
+If they're not on the path, or you want to select different binaries, you can configure this as follows:
+
 ```java
 new HelmGap("/path/to/helm", "/path/to/kbld")
 ```

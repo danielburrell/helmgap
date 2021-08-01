@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.co.solong.helmgap.descriptors.ChartDescriptor;
+import uk.co.solong.helmgap.helm.Helm;
+import uk.co.solong.helmgap.kbld.Kbld;
 import uk.co.solong.helmgap.kbld.KbldConfig;
 
 import java.io.File;
@@ -45,7 +47,7 @@ class HelmGapTest {
         sessionRoot = Files.createTempDirectory("helmgap");
         pullDir = Paths.get(sessionRoot.toString(), PULL_DIR);
         templateDir = Paths.get(sessionRoot.toString(), TEMPLATE_DIR);
-        shaDir = Paths.get(sessionRoot.toString(), SHA_DIR);
+        shaDir = Paths.get(sessionRoot.toString(), LOCK_FILE_DIR);
         archiveDir = Paths.get(sessionRoot.toString(), ARCHIVE_DIR);
         chartTarTmp = Paths.get(sessionRoot.toString(), CHART_TAR_TMP);
         chartRoot = Paths.get(pullDir.toString(), name);
@@ -57,9 +59,12 @@ class HelmGapTest {
         archiveDir.toFile().mkdirs();
         chartTarTmp.toFile().mkdirs();
     }
+
+
+
     @Test
     void helmPull() throws IOException, HelmPullException, ExternalProcessError {
-        HelmGap testSubject = new HelmGap();
+        Helm testSubject = new Helm("helm");
         assertEquals(0, Files.list(pullDir).count());
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
@@ -69,7 +74,7 @@ class HelmGapTest {
 
     @Test
     void helmDeleteTests() throws IOException, HelmPullException, ExternalProcessError, CouldNotDeleteTestsException {
-        HelmGap testSubject = new HelmGap();
+        Helm testSubject = new Helm("helm");
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
         testSubject.helmDeleteTests(chartRoot);
@@ -88,7 +93,7 @@ class HelmGapTest {
 
     @Test
     void helmTemplate() throws HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException {
-        HelmGap testSubject = new HelmGap();
+        Helm testSubject = new Helm("helm");
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
         testSubject.helmDeleteTests(chartRoot);
@@ -99,13 +104,14 @@ class HelmGapTest {
 
     @Test
     void kbldLockFileContainsAtleastOneResolvedSha256Reference() throws IOException, HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException, KbldLockFileGenerationException {
-        HelmGap testSubject = new HelmGap();
+        Helm testSubject = new Helm("helm");
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
         testSubject.helmDeleteTests(chartRoot);
         Map<String, String> valueOverrides = new HashMap<>();
         testSubject.helmTemplate(chartRoot, templateDir, valueOverrides);
-        File shaFile = testSubject.kbldToLockFile(templateDir, shaDir);
+        Kbld kbld = new Kbld("kbld");
+        File shaFile = kbld.generateLockFile(templateDir, shaDir, "someName", "1.0");
         ObjectMapper m = new ObjectMapper(new YAMLFactory());
         KbldConfig kbldConfig = m.readValue(shaFile, KbldConfig.class);
         assertTrue(kbldConfig.getOverrides().size() > 0);
@@ -114,14 +120,15 @@ class HelmGapTest {
 
     @Test
     void shouldShowOverridenValueInLockFileWhenImageTagIsOverridenInChart() throws IOException, HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException, KbldLockFileGenerationException {
-        HelmGap testSubject = new HelmGap();
+        Helm testSubject = new Helm("helm");
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
         testSubject.helmDeleteTests(chartRoot);
         Map<String, String> valueOverrides = new HashMap<>();
         valueOverrides.put("image.tag", "5.0");
         testSubject.helmTemplate(chartRoot, templateDir, valueOverrides);
-        File shaFile = testSubject.kbldToLockFile(templateDir, shaDir);
+        Kbld kbld = new Kbld("kbld");
+        File shaFile = kbld.generateLockFile(templateDir, shaDir, "redis", "5.0");
         ObjectMapper m = new ObjectMapper(new YAMLFactory());
         KbldConfig kbldConfig = m.readValue(shaFile, KbldConfig.class);
         assertTrue(kbldConfig.getOverrides().size() > 0);
@@ -130,14 +137,15 @@ class HelmGapTest {
 
     @Test
     void kbldPkg() throws HelmPullException, ExternalProcessError, CouldNotDeleteTestsException, HelmTemplateException, KbldLockFileGenerationException, KbldPkgException {
-        HelmGap testSubject = new HelmGap();
+        Helm testSubject = new Helm("helm");
         ChartDescriptor chartDescriptor = ChartDescriptor.byShortName(repo, name, version);
         testSubject.helmPull(chartDescriptor, pullDir, chartTarTmp);
         testSubject.helmDeleteTests(chartRoot);
         Map<String, String> valueOverrides = new HashMap<>();
         testSubject.helmTemplate(chartRoot, templateDir, valueOverrides);
-        File shaFile = testSubject.kbldToLockFile(templateDir, shaDir);
-        File archiveFile = testSubject.kbldPkg(shaFile, archiveDir, name, version);
+        Kbld kbld = new Kbld("kbld");
+        File shaFile = kbld.generateLockFile(templateDir, shaDir, "redis", "5.0");
+        File archiveFile = kbld.pkg(shaFile, archiveDir, name, version);
         assertTrue(archiveFile.exists());
         System.out.println(archiveFile.toString());
     }
@@ -156,6 +164,28 @@ class HelmGapTest {
     void buildAirgapByChartUrl() throws AirgapInstallException, IOException {
         HelmGap testSubject = new HelmGap();
         ChartDescriptor chartDescriptor = ChartDescriptor.byChartUrl("https://charts.bitnami.com/bitnami/redis-14.8.3.tgz");
+        AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
+        logger.info("Generated airgap installer with\n" +
+                "Registry: "+airgapInstall.getAirgapInstallerArchive().toString()+"\n" +
+                "Chart: "+airgapInstall.getOriginalChart().toString()+"\n" +
+                "LockFile: "+airgapInstall.getLockFile().toString());
+        assertTrue(airgapInstall.getOriginalChart().exists());
+        assertTrue(airgapInstall.getAirgapInstallerArchive().exists());
+        assertTrue(airgapInstall.getLockFile().exists());
+        ObjectMapper m = new ObjectMapper(new YAMLFactory());
+        KbldConfig kbldConfig = m.readValue(airgapInstall.getLockFile(), KbldConfig.class);
+        assertTrue(kbldConfig.getOverrides().size() > 0);
+        assertTrue(kbldConfig.getOverrides().get(0).getNewImage().contains("sha256"));
+    }
+
+    @Test
+    void buildAirgapByArchive() throws AirgapInstallException, IOException {
+        HelmGap testSubject = new HelmGap();
+        Helm helm = new Helm("helm");
+        ChartDescriptor tmpChartDescriptor = ChartDescriptor.byRepoUrl("https://charts.bitnami.com/bitnami", "redis", "14.8.3");
+
+        File archive = helm.helmPull(tmpChartDescriptor, pullDir, chartTarTmp);
+        ChartDescriptor chartDescriptor = ChartDescriptor.byArchive(archive);
         AirgapInstall airgapInstall = testSubject.buildAirgap(chartDescriptor);
         logger.info("Generated airgap installer with\n" +
                 "Registry: "+airgapInstall.getAirgapInstallerArchive().toString()+"\n" +

@@ -1,5 +1,8 @@
 package uk.co.solong.helmgap.descriptors;
 
+import uk.co.solong.helmgap.chartstrategy.ChartStrategy;
+import uk.co.solong.helmgap.chartstrategy.HelmStrategy;
+
 import java.io.File;
 import java.util.List;
 
@@ -51,5 +54,9 @@ public abstract class ChartDescriptor {
     }
 
     public abstract List<String> getDescriptor();
+
+    public ChartStrategy getChartStrategy() {
+        return new HelmStrategy();
+    }
 
 }
